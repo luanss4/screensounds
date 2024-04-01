@@ -1,7 +1,9 @@
 package br.com.alura.screensound.controller;
 
+import br.com.alura.screensound.dto.ArtistaDTO;
 import br.com.alura.screensound.model.Artista;
 import br.com.alura.screensound.repository.ArtistaRepository;
+import br.com.alura.screensound.service.ArtistaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,35 +15,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/artistas")
 public class ArtistaController {
+    private final ArtistaService artistaService;
 
-     private final ArtistaRepository artistaRepository;
-
-    public ArtistaController(ArtistaRepository artistaRepository) {
-        this.artistaRepository = artistaRepository;
+    public ArtistaController(ArtistaService artistaService) {
+        this.artistaService = artistaService;
     }
-
     @GetMapping
-     public ResponseEntity<List<Artista>> listar() {
-         return ResponseEntity.ok(artistaRepository.findAll());
-     }
-
-     @PostMapping
-     public void cadastrar(@RequestBody Artista artista) {
-         artistaRepository.save(artista);
-     }
-
-     @DeleteMapping("/{id}")
-     public void deletar(@PathVariable Long id) {
-         artistaRepository.deleteById(id);
-     }
-
-     @PutMapping("/{id}")
-     public void atualizar(@PathVariable Long id, @RequestBody Artista artista) {
-         artistaRepository.save(artista);
-     }
-
-     @GetMapping("/{id}")
-     public Artista buscarPorId(@PathVariable Long id) {
-         return artistaRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-     }
+    public ResponseEntity<List<ArtistaDTO>> listarArtistas() {
+        List<ArtistaDTO> artistas = artistaService.listarArtistas();
+        return ResponseEntity.ok(artistas);
+    }
 }
